@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
+import type { ISourceOptions } from "@tsparticles/engine";
 
 export default function SpaceBackground() {
   const [ready, setReady] = useState(false);
@@ -13,7 +14,7 @@ export default function SpaceBackground() {
     }).then(() => setReady(true));
   }, []);
 
-  const options = useMemo(
+  const options: ISourceOptions = useMemo(
     () => ({
       fullScreen: false,
       background: {
@@ -74,7 +75,7 @@ export default function SpaceBackground() {
       },
       detectRetina: true,
     }),
-    []
+    [],
   );
 
   if (!ready) return null;
