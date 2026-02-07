@@ -5,7 +5,9 @@ import { useAuth } from "@/app/contexts/authContext";
 import { useRouter } from "next/navigation";
 import { signupSchema } from "@/schemas/signupSchema";
 import { motion, AnimatePresence } from "framer-motion";
-import {TailSpin} from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function UserSignup() {
   const [name, setName] = useState<string>("");
@@ -84,18 +86,33 @@ export default function UserSignup() {
     }
     setLoading(true);
     try {
-      const res = await register({ name, email, password, role });
+      const response = await register({ name, email, password, role });
       setLoading(false);
-      if (res.message) {
-      } else {
+      if (response?.success) {
+        toast.success(response.success, {
+          autoClose: 1600,
+          onClose: () => router.push("/profile"),
+        });
+        return;
       }
+      if (response?.message) {
+        toast.error(response.message);
+        return;
+      }
+      if (response?.error) {
+        toast.error(response.error);
+        return;
+      }
+      toast.error("Server side error occurred.");
     } catch (err: any) {
       setLoading(false);
+      toast.error("Server side error occurred.");
     }
   }
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={2500} />
       <div className="min-h-screen min-w-screen flex justify-center items-center">
         <fieldset className="relative md:p-[60px] max-md:p-[20px] md:pb-12 max-md:pb-10 md:pt-[1px] max-md:pt-[5px] md:mt-3 border-2 border-gray-500 rounded-xl flex flex-col">
           <legend className="text-center">
@@ -216,10 +233,17 @@ export default function UserSignup() {
           </div>
           <div className="w-full h-fit flex justify-center md:mt-6 max-md:mt-8">
             <button
-              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
+              disabled={loading}
+              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black disabled:cursor-not-allowed disabled:opacity-70"
               onMouseDown={signUpHandler}
             >
-              {loading?(<div className="absolute inset-0 bg-transparent flex justify-center items-center"><TailSpin height={25} width={25} strokeWidth={6} color="#ffffff"/></div>):"Signup"}
+              {loading ? (
+                <div className="absolute inset-0 bg-transparent flex justify-center items-center">
+                  <TailSpin height={25} width={25} strokeWidth={6} color="#ffffff" />
+                </div>
+              ) : (
+                "Signup"
+              )}
             </button>
           </div>
         </fieldset>
