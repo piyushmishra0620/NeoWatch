@@ -32,15 +32,15 @@ export default function Home() {
       router.push("/chat");
       return;
     }
-    router.push("/user");
+    router.push("/auth/user");
   };
 
   const handleSecondaryAction = () => {
     if (canAccess) {
-      router.push("/asteroids");
+      router.push("/asteroid");
       return;
     }
-    router.push("/research");
+    router.push("/auth/researcher");
   };
 
   const features = [
