@@ -1,11 +1,12 @@
-const express = require('express');
-const app = express();
-const {protected} = require('../middlewares/authMiddlewares');
-const {signup,login,logout,getuser} = require('../controllers/authControllers');
+const {signup,login,logout,getUser} = require("../controllers/authControllers");
+const {protected} = require("../middlewares/authMiddlewares");
 
-app.post("/signup",signup);
-app.post("/login",login);
-app.post("/logout",logout);
-app.get("/protected",protected,getuser);
+const express = require("express");
+const server = express.Router();
 
-module.exports = app;
+server.post("/signup",signup);
+server.post("/login",login);
+server.get("/getUser",protected,getUser);
+server.delete("/logout",logout);
+
+module.exports = server;

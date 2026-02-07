@@ -1,6 +1,6 @@
 "use client";
 
-export default function Profile(){
+export default function Dashboard(){
     return(
         <>
         </>
