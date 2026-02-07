@@ -1,6 +1,6 @@
 import {api} from "@/lib/api";
 
-export async function signup(body:{name:string,email:string,password:string}){
+export async function signup(body:{name:string,email:string,password:string,role:string}){
     try{
         const response = await api.post("/auth/signup",body);
         return {data:response.data,status:response.status};
@@ -10,7 +10,7 @@ export async function signup(body:{name:string,email:string,password:string}){
     }
 }
 
-export async function login(body:{email:string,password:string}){
+export async function login(body:{email:string,password:string,role:string}){
     try{
         const response = await api.post("/auth/login",body);
         return {data:response.data,status:response.status};

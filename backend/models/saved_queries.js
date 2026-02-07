@@ -5,9 +5,15 @@ const savedQuerySchema = new mongoose.Schema({
     name:{type:String},
     filters:{
         minDiameter:{type:Number},
-        maxMOID:{type:Number},
+        maxDiameter:{type:Number},
+        minMissDistanceKm:{type:Number},
+        maxMissDistanceKm:{type:Number},
         hazardousOnly:{type:Boolean},
-        minVelocity:{type:Number}
+        minVelocity:{type:Number},
+        maxVelocity:{type:Number},
+        orbitingBody:{type:String},
+        startDate:{type:String},
+        endDate:{type:String}
     },
     resultCount:{type:Number},
     lastExecutedAt:{type:Date},

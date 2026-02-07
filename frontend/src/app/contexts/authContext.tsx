@@ -6,8 +6,9 @@ import {NextResponse} from "next/server";
 import SplashScreen from "@/app/components/Splash";
 
 interface User{
-    name:string,
-    email:string
+    username?:string,
+    emailId?:string,
+    role?:string
 }
 
 interface AuthType{
@@ -18,8 +19,8 @@ interface AuthType{
 
 interface AuthContextType{
     context:AuthType,
-    register:(body:{name:string,email:string,password:string}) => Promise<any>,
-    signin:(body:{email:string,password:string}) => Promise<any>,
+    register:(body:{name:string,email:string,password:string,role:string}) => Promise<any>,
+    signin:(body:{email:string,password:string,role:string}) => Promise<any>,
     signOut: () => Promise<any>
 }
 
@@ -46,8 +47,9 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
     useEffect(()=>{
         const session = async ()=>{
             const response = await getUser();
-            if(response.data?.success.user){
-                dispatch({type:"setUser",user:response.data?.success.user});
+            const user = response?.user || response?.data?.user || response?.data?.success?.user;
+            if(user){
+                dispatch({type:"setUser",user});
                 dispatch({type:"setIsAuthenticated",isAuthenticated:true});
             }
             else{
@@ -59,11 +61,12 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
         setTimeout(()=>session(),10000);
     },[]);
 
-    const register = async (body:{name:string,email:string,password:string})=>{
+    const register = async (body:{name:string,email:string,password:string,role:string})=>{
         try{
             const response = await signup(body);
             if(response.data){
-                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+                const user = response.data?.user || response.data;
+                dispatch({type:"setUser",user});
                 dispatch({type:"setLoading",loading:false});
                 dispatch({type:"setIsAuthenticated",isAuthenticated:true});
                 return response.data;
@@ -82,11 +85,12 @@ export const AuthProvider = (props:{children:React.ReactNode})=>{
         }
     }
 
-    const signin = async(body:{email:string,password:string})=>{
+    const signin = async(body:{email:string,password:string,role:string})=>{
         try{
             const response = await login(body);
             if(response.data){
-                dispatch({type:"setUser",user:{name:response.data.name,email:response.data.email}});
+                const user = response.data?.user || response.data;
+                dispatch({type:"setUser",user});
                 dispatch({type:"setLoading",loading:false});
                 dispatch({type:"setIsAuthenticated",isAuthenticated:true});
                 return response.data;

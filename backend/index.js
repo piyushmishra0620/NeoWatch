@@ -13,6 +13,6 @@ const server = http.createServer(app);
 
 initSocket(server);
 
-app.listen(port,()=>{
+server.listen(port,()=>{
     console.log(`Server running at http://localhost:${port}`);
 });

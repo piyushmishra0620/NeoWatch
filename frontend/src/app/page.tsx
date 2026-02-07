@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import {useAuth} from "@/app/contexts/authContext";
 
 gsap.registerPlugin(SplitText);
 
@@ -83,7 +84,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={childVariants}
-            className="px-4 md:px-5 py-3 md:py-4 bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 mg:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-blue-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
+            className="px-4 md:px-5 py-3 md:py-4 bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 md:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-blue-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
           >
             Get Started
           </motion.button>
@@ -91,7 +92,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={childVariants}
-            className="px-4 md:px-5 py-3 md:py-4 bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 mg:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-blue-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
+            className="px-4 md:px-5 py-3 md:py-4 bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 md:bg-[lab(44 76.83 71.8)] cursor-pointer text-gray-300 font-bold md:text-lg text-md border border-blue-500 outline-2 outline-amber-50 outline-offset-3 rounded-lg hover:-translate-y-1 ease-in duration-100"
           >
             View Asteroids
           </motion.button>

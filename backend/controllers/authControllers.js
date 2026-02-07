@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const { users } = require("../models/userModel");
 const {savedQueries} = require("../models/saved_queries");
 const {riskModels} = require("../models/riskModel");
-const {researchDataSets} = require("../models/researchDataSet");
 
 const signup = async (req, res) => {
     const { username, email, password, role } = req.body;
@@ -20,7 +19,7 @@ const signup = async (req, res) => {
             httpOnly: true, maxAge: 30 * 24 * 60 * 60,
             expires: new Date(Date.now() + 30 * 24 * 60 * 60)
         });
-        return res.status(200).json({ success: "User created." });
+        return res.status(200).json({ success: "User created.", user:{username:user.username,emailId:user.emailId,role:user.role} });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ error: "Server side error occurred!" });
@@ -43,7 +42,7 @@ const login = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60),
         maxAge: 30 * 24 * 60 * 60
     });
-    return res.status(200).json({ success: "User found" });
+    return res.status(200).json({ success: "User found", user:{username:existingUser.username,emailId:existingUser.emailId,role:existingUser.role} });
 }
 
 const getUser = async (req,res)=>{
@@ -55,8 +54,7 @@ const getUser = async (req,res)=>{
         if(user.role=="researcher"){
             const savedqueries = await savedQueries.findOne({userId:user._id});
             const riskmodels = await riskModels.findOne({userId:user._id});
-            const researchdatasets = await researchDataSets.findOne({userId:user._id});
-            return res.status(200).json({success:"User found!",user:{}});
+            return res.status(200).json({success:"User found!",user:{username:user.username,emailId:user.emailId,role:user.role,savedqueries,riskmodels}});
         }
         return res.status(200).json({success:"User found!",user:{username:user.username,emailId:user.emailId,role:user.role,watchList:user.watchList,preferences:user.preferences}});
     }catch(err){

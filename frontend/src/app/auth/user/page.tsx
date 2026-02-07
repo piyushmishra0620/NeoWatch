@@ -1,6 +1,9 @@
 "use client";
 
+import {useRouter} from "next/navigation";
+
 export default function User() {
+  const router = useRouter();
   return (
     <>
       <div className="min-w-screen min-h-screen flex justify-center items-center">

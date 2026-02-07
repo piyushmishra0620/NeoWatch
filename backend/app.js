@@ -8,8 +8,14 @@ const cors = require("cors");
 app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(express.json());
+const allowedOrigins = (process.env.FRONTEND_ORIGIN || "http://localhost:3000,http://localhost:3001")
+    .split(",")
+    .map((origin)=>origin.trim())
+    .filter(Boolean);
+
 app.use(cors({
-    origin:"*"
+    origin:allowedOrigins,
+    credentials:true
 }));
 
 app.use("/auth",authRoutes);
