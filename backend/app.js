@@ -1,5 +1,5 @@
 const authRoutes = require("./routes/authRoutes");
-const {connectToDb} = require("./connections/connection");
+const apiRoutes = require("./routes/apiRoutes");
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -12,8 +12,8 @@ app.use(cors({
     origin:"*"
 }));
 
-connectToDb();
 app.use("/auth",authRoutes);
+app.use("/api",apiRoutes);
 
 module.exports = {app};
 
