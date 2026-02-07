@@ -1,6 +1,19 @@
-const app = require("express");
-const server = app();
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const authRoutes = require("./routes/authRoutes");
+const {connectToDb} = require("./connections/connection");
+const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
-const authRoutes = require('./routes/authRoutes');
+app.use(cookieParser());
+app.use(express.urlencoded());
+app.use(express.json());
+app.use(cors({
+    origin:"*"
+}));
+
+connectToDb();
+app.use("/auth",authRoutes);
+
+module.exports = {app};
+
