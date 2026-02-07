@@ -10,6 +10,7 @@ import { useAuth } from "@/app/contexts/authContext";
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { context, signOut } = useAuth();
   const router = useRouter();
 
@@ -45,6 +46,14 @@ export default function Navbar() {
     setIsModalOpen(false);
   };
 
+  const handleMenuToggle = () => {
+    setIsMenuOpen(true);
+  };
+
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <motion.div
@@ -70,11 +79,17 @@ export default function Navbar() {
           >
             <User2Icon className="text-blue-200 cursor-pointer" />
           </button>
-          <div className="py-3 px-[5px] border rounded-lg border-blue-400 ring ring-blue-200 ring-offset-1 cursor-pointer">
-            <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mb-[3px]"></span>
-            <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mt-[3px] mb-[3px]"></span>
-            <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mt-[3px] mb-[3px]"></span>
-          </div>
+          {!isMenuOpen && (
+            <button
+              type="button"
+              onClick={handleMenuToggle}
+              className="py-3 px-[5px] border rounded-lg border-blue-400 ring ring-blue-200 ring-offset-1 cursor-pointer"
+            >
+              <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mb-[3px]"></span>
+              <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mt-[3px] mb-[3px]"></span>
+              <span className="block w-[30px] h-[4px] bg-blue-400 rounded-lg mt-[3px] mb-[3px]"></span>
+            </button>
+          )}
         </div>
       </motion.div>
       {isModalOpen && (
@@ -138,6 +153,67 @@ export default function Navbar() {
               </>
             )}
           </div>
+        </div>
+      )}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50">
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={handleMenuClose}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          />
+          <aside className="absolute right-4 top-20 w-[280px] rounded-2xl border border-blue-400/40 bg-slate-950/95 px-6 py-6 text-blue-50 shadow-[0_30px_80px_-50px_rgba(56,189,248,0.8)]">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold tracking-[0.2em] text-blue-100">
+                NAVIGATION
+              </h3>
+              <button
+                type="button"
+                onClick={handleMenuClose}
+                className="rounded-full border border-blue-400/50 p-2 text-blue-100 hover:border-blue-300"
+              >
+                ✕
+              </button>
+            </div>
+            <nav className="mt-6 flex flex-col gap-4 text-sm uppercase tracking-[0.2em]">
+              <Link
+                href="/"
+                onClick={handleMenuClose}
+                className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-blue-100 transition hover:-translate-y-0.5 hover:border-blue-300/70 hover:bg-blue-500/20"
+              >
+                Home
+              </Link>
+              <Link
+                href="/asteroids"
+                onClick={handleMenuClose}
+                className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-blue-100 transition hover:-translate-y-0.5 hover:border-blue-300/70 hover:bg-blue-500/20"
+              >
+                Asteroids
+              </Link>
+              <Link
+                href="/research"
+                onClick={handleMenuClose}
+                className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-blue-100 transition hover:-translate-y-0.5 hover:border-blue-300/70 hover:bg-blue-500/20"
+              >
+                Research
+              </Link>
+              <Link
+                href="/profile"
+                onClick={handleMenuClose}
+                className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-blue-100 transition hover:-translate-y-0.5 hover:border-blue-300/70 hover:bg-blue-500/20"
+              >
+                Profile
+              </Link>
+              <Link
+                href="/chat"
+                onClick={handleMenuClose}
+                className="rounded-lg border border-blue-400/30 bg-blue-500/10 px-4 py-3 text-blue-100 transition hover:-translate-y-0.5 hover:border-blue-300/70 hover:bg-blue-500/20"
+              >
+                Chat
+              </Link>
+            </nav>
+          </aside>
         </div>
       )}
     </>
