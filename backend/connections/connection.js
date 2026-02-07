@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 
-const Mongo_URI = process.env.MOGNO_URI;
+const mongo_uri = process.env.MOGNO_URI;
 
 async function connectToDb(){
     try{
-        await mongoose.connect(Mongo_URI);
-        console.log("Connection with database successful!");
+        await mongoose.connect(mongo_uri);
+        console.log("Connected to database!");
     }catch(error){
         console.error(error);
-        return {error:{message:"Server Side Error occurred."},status:500};
+        process.exit(1);
     }
 }
 

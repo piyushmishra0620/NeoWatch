@@ -59,11 +59,23 @@ export default function ResearcherSignup() {
   }
 
   function instituteValidation(){
-    const res = researcherSchema.shape.institution.safeParse();
+    const res = researcherSchema.shape.institution.safeParse(institution);
+    if(!res.success){
+        setInstitutionError(true);
+        setInstitutionErr(res.error.issues[0].message);
+    }else{
+        setInstitutionError(false);
+    }
   } 
   
   function specializationValidation(){
-
+    const res = researcherSchema.shape.specialization.safeParse(institution);
+    if(!(res.success)){
+        setSpecializationError(true);
+        setSpecializationErr(res.error.issues[0].message);
+    }else{
+        setInstitutionError(false);
+    }
   }
 
   async function signUpHandler() {
@@ -119,10 +131,10 @@ export default function ResearcherSignup() {
               </p>
             </div>
           </legend>
-          <p className="text-center text-[35px] max-md:text-[26px] font-extrabold cursor-default bg-black">
+          <p className="text-center text-[35px] max-md:text-[26px] font-extrabold cursor-default text-black">
             CREATE ACCOUNT
           </p>
-          <p className="mt-[2px] text-center text-[18px] max-md:text-[12px] max-md:font-semibold bg-black font-medium cursor-default">
+          <p className="mt-[2px] text-center text-[18px] max-md:text-[12px] max-md:font-semibold text-black font-medium cursor-default">
             Register and experience best features
           </p>
           <div className="mt-2 max-md:mt-3">
