@@ -5,14 +5,16 @@ import { useAuth } from "@/app/contexts/authContext";
 import { useRouter } from "next/navigation";
 import { researcherSchema } from "@/schemas/researcherSchema";
 import { motion, AnimatePresence } from "framer-motion";
-import {TailSpin} from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ResearcherSignup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [institution,setInstitution] = useState<string>("");
-  const [specialization,setSpecialization] = useState<string>("");
+  const [institution, setInstitution] = useState<string>("");
+  const [specialization, setSpecialization] = useState<string>("");
   const router = useRouter();
   const [nameError, setNameError] = useState<boolean | string>("");
   const [nameErr, setNameErr] = useState<string>("");
@@ -20,10 +22,12 @@ export default function ResearcherSignup() {
   const [emailErr, setEmailErr] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string | boolean>("");
   const [passwordErr, setPasswordErr] = useState<string>("");
-  const [institutionError,setInstitutionError] = useState<string | boolean>("");
-  const [institutionErr,setInstitutionErr] = useState<string>("");
-  const [specializationErr,setSpecializationErr] = useState<string>("");
-  const [specializationError,setSpecializationError] = useState<string | boolean>("");
+  const [institutionError, setInstitutionError] = useState<string | boolean>("");
+  const [institutionErr, setInstitutionErr] = useState<string>("");
+  const [specializationErr, setSpecializationErr] = useState<string>("");
+  const [specializationError, setSpecializationError] = useState<
+    string | boolean
+  >("");
   const [loading, setLoading] = useState<boolean>(false);
   const { register } = useAuth();
   const role = "researcher";
@@ -58,28 +62,34 @@ export default function ResearcherSignup() {
     }
   }
 
-  function instituteValidation(){
+  function instituteValidation() {
     const res = researcherSchema.shape.institution.safeParse(institution);
-    if(!res.success){
-        setInstitutionError(true);
-        setInstitutionErr(res.error.issues[0].message);
-    }else{
-        setInstitutionError(false);
+    if (!res.success) {
+      setInstitutionError(true);
+      setInstitutionErr(res.error.issues[0].message);
+    } else {
+      setInstitutionError(false);
     }
-  } 
-  
-  function specializationValidation(){
-    const res = researcherSchema.shape.specialization.safeParse(institution);
-    if(!(res.success)){
-        setSpecializationError(true);
-        setSpecializationErr(res.error.issues[0].message);
-    }else{
-        setInstitutionError(false);
+  }
+
+  function specializationValidation() {
+    const res = researcherSchema.shape.specialization.safeParse(specialization);
+    if (!res.success) {
+      setSpecializationError(true);
+      setSpecializationErr(res.error.issues[0].message);
+    } else {
+      setSpecializationError(false);
     }
   }
 
   async function signUpHandler() {
-    const res = researcherSchema.safeParse({ name, email, password });
+    const res = researcherSchema.safeParse({
+      name,
+      email,
+      password,
+      institution,
+      specialization,
+    });
     if (!res.success) {
       const nameInvalid = res.error.issues.find(
         (issue) => issue.path[0] == "name",
@@ -89,6 +99,12 @@ export default function ResearcherSignup() {
       );
       const passwordInvalid = res.error.issues.find(
         (issue) => issue.path[0] == "password",
+      );
+      const institutionInvalid = res.error.issues.find(
+        (issue) => issue.path[0] == "institution",
+      );
+      const specializationInvalid = res.error.issues.find(
+        (issue) => issue.path[0] == "specialization",
       );
       if (nameInvalid) {
         setNameError(true);
@@ -102,26 +118,58 @@ export default function ResearcherSignup() {
         setPasswordError(true);
         setPasswordErr(passwordInvalid.message);
       }
+      if (institutionInvalid) {
+        setInstitutionError(true);
+        setInstitutionErr(institutionInvalid.message);
+      }
+      if (specializationInvalid) {
+        setSpecializationError(true);
+        setSpecializationErr(specializationInvalid.message);
+      }
       return;
     } else {
       setNameError(false);
       setEmailError(false);
       setPasswordError(false);
+      setInstitutionError(false);
+      setSpecializationError(false);
     }
     setLoading(true);
     try {
-      const res = await register({ name, email, password, role });
+      const response = await register({
+        name,
+        email,
+        password,
+        role,
+        institution,
+        specialization,
+      });
       setLoading(false);
-      if (res.message) {
-      } else {
+      if (response?.success) {
+        toast.success(response.success, {
+          autoClose: 1600,
+          onClose: () => router.push("/profile"),
+        });
+        return;
       }
+      if (response?.message) {
+        toast.error(response.message);
+        return;
+      }
+      if (response?.error) {
+        toast.error(response.error);
+        return;
+      }
+      toast.error("Server side error occurred.");
     } catch (err: any) {
       setLoading(false);
+      toast.error("Server side error occurred.");
     }
   }
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={2500} />
       <div className="min-h-screen min-w-screen flex justify-center items-center">
         <fieldset className="relative md:p-[60px] max-md:p-[20px] md:pb-12 max-md:pb-10 md:pt-[1px] max-md:pt-[5px] md:mt-3 border-2 border-gray-500 rounded-xl flex flex-col">
           <legend className="text-center">
@@ -314,10 +362,17 @@ export default function ResearcherSignup() {
           </div>
           <div className="w-full h-fit flex justify-center md:mt-6 max-md:mt-8">
             <button
-              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black"
+              disabled={loading}
+              className="cursor-pointer relative w-[100%] max-md:w-[100%] py-[14px] px-25 max-md:px-14 max-md:py-[9px] font-bold max-md:font-semibold text-lg rounded-xl bg-blue-600 focus:bg-blue-500 hover:bg-blue-500 outline-offset-2 outline-1 max-md:outline-2 outline-gray-100 text-black disabled:cursor-not-allowed disabled:opacity-70"
               onMouseDown={signUpHandler}
             >
-              {loading?(<div className="absolute inset-0 bg-transparent flex justify-center items-center"><TailSpin height={25} width={25} strokeWidth={6} color="#ffffff"/></div>):"Signup"}
+              {loading ? (
+                <div className="absolute inset-0 bg-transparent flex justify-center items-center">
+                  <TailSpin height={25} width={25} strokeWidth={6} color="#ffffff" />
+                </div>
+              ) : (
+                "Signup"
+              )}
             </button>
           </div>
         </fieldset>

@@ -1,6 +1,13 @@
-import {api} from "@/lib/api";
+import { api } from "@/lib/api";
 
-export async function signup(body:{name:string,email:string,password:string,role:string}){
+export async function signup(body: {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  institution?: string;
+  specialization?: string;
+}) {
     try{
         const response = await api.post("/auth/signup",body);
         return {data:response.data,status:response.status};

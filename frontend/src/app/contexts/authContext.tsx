@@ -24,6 +24,8 @@ interface AuthContextType {
     email: string;
     password: string;
     role: string;
+    institution?: string;
+    specialization?: string;
   }) => Promise<any>;
   signin: (body: {
     email: string;
@@ -82,6 +84,8 @@ export const AuthProvider = (props: { children: React.ReactNode }) => {
     email: string;
     password: string;
     role: string;
+    institution?: string;
+    specialization?: string;
   }) => {
     try {
       const response = await signup(body);
